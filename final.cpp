@@ -11,13 +11,18 @@
 
 using namespace std;
 
-class Map
+class Robot
 {
 private:
     int map[10][10];
-    
+    int power;
+    int turnsSurvived;
+    int gene[16][5];
+    int positionX, positionY;
+    int sNorth, sEast, sSouth, sWest;
 public:
-    Map()
+    
+    Robot()
     {
         //Create the initial grid with all 0's
         for (int i = 0; i < 10; i++)
@@ -35,82 +40,6 @@ public:
             }
             map[x][y] = 9;
         }
-    }
-    
-    void displayMap()
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            for (int j = 0; j < 10; j++)
-            {
-                cout << map[i][j] << " ";
-            }
-            cout << endl;
-        }
-    }
-    
-    void placeRobot(int &x, int &y)
-    {
-        do
-        {
-            x = rand() % 10;
-            y = rand() % 10;
-        } while (map[x][y] == 9);
-        map[x][y] = 5;
-    }
-    
-    void readSensors(int x, int y, int &north, int &east, int &south, int &west)
-    {
-        //For the sensors: 0 is no object in square, 1 is battery, 2 is wall
-        
-        if (x == 0)
-            north = 2;
-        else if (map[x - 1][y] == 9)
-            north = 1;
-        else
-            north = 0;
-        
-        if (x == 9)
-            south = 2;
-        else if (map[x + 1][y] == 9)
-            south = 1;
-        else
-            south = 0;
-        
-        if (y == 0)
-            west = 2;
-        else if (map[x][y - 1] == 9)
-            west = 1;
-        else
-            west = 0;
-        
-        if (y == 9)
-            east = 2;
-        else if (map[x][y + 1])
-            east = 1;
-        else
-            east = 0;
-    }
-    
-    void moveRobot(int &x, int &y, int moveAction)
-    {
-        
-    }
-};
-
-class Robot
-{
-private:
-    int power;
-    int turnsSurvived;
-    int gene[16][5];
-    
-public:
-    int positionX, positionY;
-    int sNorth, sEast, sSouth, sWest;
-    
-    Robot()
-    {
         //Start with 5 power
         power = 5;
         turnsSurvived = 0;
@@ -125,6 +54,29 @@ public:
         }
         positionX = rand() % 10;
         positionY = rand() % 10;
+        
+    }
+    
+    void displayMap()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                cout << map[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+    
+    void placeRobot()
+    {
+        do
+        {
+            positionX = rand() % 10;
+            positionY = rand() % 10;
+        } while (map[positionX][positionY] == 9);
+        map[positionX][positionY] = 5;
     }
     
     void printRobot()
@@ -144,6 +96,39 @@ public:
         }
     }
     
+    void readSensors()
+    {
+        //For the sensors: 0 is no object in square, 1 is battery, 2 is wall
+        
+        if (positionX == 0)
+            sNorth = 2;
+        else if (map[positionX - 1][positionY] == 9)
+            sNorth = 1;
+        else
+            sNorth = 0;
+        
+        if (positionX == 9)
+            sSouth = 2;
+        else if (map[positionX + 1][positionY] == 9)
+            sSouth = 1;
+        else
+            sSouth = 0;
+        
+        if (positionY == 0)
+            sWest = 2;
+        else if (map[positionX][positionY - 1] == 9)
+            sWest = 1;
+        else
+            sWest = 0;
+        
+        if (positionY == 9)
+            sEast = 2;
+        else if (map[positionX][positionY + 1])
+            sEast = 1;
+        else
+            sEast = 0;
+    }
+    
     int compareGenes()
     {
         for (int i = 0; i < 16; i++)
@@ -151,6 +136,11 @@ public:
                 return gene[i][4];
         
         return gene[15][4];
+    }
+    
+    void moveRobot()
+    {
+        
     }
 };
 
@@ -161,39 +151,30 @@ int main() {
     //Variable Declarations
     
     
-    Map map1;
-    //Map map2;
-    map1.displayMap();
-    cout << endl;
-    //map2.displayMap();
-    //cout << endl;
-    
     Robot robot1;
-    //Robot robot2;
+    robot1.displayMap();
+    cout << endl;
+ 
     
     //Place the robots on the map
-    map1.placeRobot(robot1.positionX, robot1.positionY);
-    //map2.placeRobot(robot2.positionX, robot2.positionY);
-    map1.displayMap();
+    robot1.placeRobot();
+    
+    robot1.displayMap();
     cout << endl;
     
     //Read the sensors
-    map1.readSensors(robot1.positionX, robot1.positionY, robot1.sNorth, robot1.sEast, robot1.sSouth, robot1.sWest);
-    //map2.readSensors(robot2.positionX, robot2.positionY, robot2.sNorth, robot2.sEast, robot2.sSouth, robot2.sWest);
+    robot1.readSensors();
     
     //int moveAction = robot1.compareGenes();********************
-    map1.moveRobot(robot1.positionX, robot1.positionY, robot1.compareGenes());
+    robot1.moveRobot();
     
 
-    map1.displayMap();
+    robot1.displayMap();
     cout << endl;
-    //map2.displayMap();
-    //cout << endl;
+   
     
     robot1.printRobot();
     cout << endl;
-    //robot2.printRobot();
-    //cout << endl;
     
     
     
